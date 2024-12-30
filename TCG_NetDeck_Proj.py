@@ -48,7 +48,7 @@ TCG_type = int(TCG_type)
 #only gets number of singles for now
 if TCG_type == POKEMON_TCG :
     print("\nEnter Pokemon Decklist. (Format: n copies, card name, card set) \nI.e. 1 Ultra Ball PAF 91") 
-    #for pokemon, we only want num of cards + name + card number of the set. Cut out 3 letter set name imo. Do a check after
+    # for pokemon, we only want num of cards + name + card number of the set. Cut out 3 letter set name imo. Do a check after
 elif TCG_type == MTG_TCG :
     print("\nEnter MTG decklist in MTG Goldfish format (Format: n copies, cardname)\nI.e. 3 Beanstalk Giant")
 
