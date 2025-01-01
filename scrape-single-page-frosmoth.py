@@ -10,6 +10,8 @@ from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 import os
 
+shdw_wait_const = 0.3
+
 def get_shadow_root(element):
     return driver.execute_script('return arguments[0].shadowRoot', element)
 
@@ -25,10 +27,42 @@ def wait_staleness_of(driver, shadow_root, val):
         EC.staleness_of(shadow_root.find_element(By.CSS_SELECTOR, value=val))
     )
 
+def toggle_pokemon_singles(driver, shadow_root):
+    # Find filters to see if pokemon singles filter is visible
+    category_list = shadow_root.find_elements(By.CSS_SELECTOR, value='div[class*="checkbox"]')
+    found = False
+
+    # see if the Pokemon Singles filter is visible
+    for category in category_list:
+        if category.get_attribute('aria-label') == 'Pokemon Singles':
+            found = True
+            break
+
+    # if filter not visible, click on show more and get the 
+    if found == False:
+        show_more_btn = shadow_root.find_element(By.CSS_SELECTOR, value='span[class*="show-more-button-text"]') #
+        shdw_rt_click_btn(show_more_btn)
+        shadow_host = driver.find_element(By.XPATH, value='//div[@id="fast-simon-serp-app"]')
+        shadow_root = get_shadow_root(shadow_host)
+
+    time.sleep(shdw_wait_const)
+    pkmn_singles_btn = shadow_root.find_element(By.CSS_SELECTOR, value='span[aria-label*="Pokemon Singles"]') # click on span, not div
+    shdw_rt_click_btn(pkmn_singles_btn)
+    time.sleep(shdw_wait_const)
+    # cannot detect staleness sometimes now... Check on this.
+    # wait until the element it finds is stale before refreshing the shadow_root
+    # WebDriverWait(driver, 5).until(
+    #     EC.staleness_of(shadow_root.find_element(By.CSS_SELECTOR, value='div[class*="product-card-items-wrapper"]'))
+    # )
+
 # scrape this website too for Pokemon singles selection : https://store.401games.ca/pages/search-results?q=irida
 # website = 'https://store.401games.ca/pages/search-results?q=frosmoth'
 website = 'https://store.401games.ca/pages/search-results?q=irida'
-filter_401 = r'&sort=price_min_to_max' #&filters=Category,Pokemon+Singles'
+filter_401_min_max = r'&sort=price_min_to_max'
+filter_401_pkmn_sngl = r'Category,Pokemon+Singles'
+filter_401_in_stock = r'In+Stock,True'
+# filter_401 = r'&filters=' + filter_401_in_stock + ',' + filter_401_pkmn_sngl
+filter_401 = r'&filters=' + filter_401_pkmn_sngl
 # add this at the end of the website search results page for 401games: &sort=price_min_to_max&filters=Category,Pokemon+Singles
 
 # headless-mode
@@ -44,9 +78,12 @@ driver.get(website + filter_401)
 # wait until website has finished loading
 WebDriverWait(driver, 10).until(lambda d: d.execute_script("return document.readyState") == "complete")
 
+
 # Find the shadow host and shadow root.
 shadow_host = driver.find_element(By.XPATH, value='//div[@id="fast-simon-serp-app"]')
 shadow_root = get_shadow_root(shadow_host)
+
+time.sleep(shdw_wait_const)
 
 # From shadowroot, find the sort min to max button and click it.
 # sort_product_btn = shadow_root.find_element(By.CSS_SELECTOR, value='span[data-value="price_min_to_max"]')
@@ -57,28 +94,8 @@ shadow_root = get_shadow_root(shadow_host)
 # shadow_host = driver.find_element(By.XPATH, value='//div[@id="fast-simon-serp-app"]')
 # shadow_root = get_shadow_root(shadow_host)
 
-category_list = shadow_root.find_elements(By.CSS_SELECTOR, value='div[class*="checkbox"]')
-found = False
+# toggle_pokemon_singles(driver, shadow_root)
 
-# see if the Pokemon Singles filter is visible
-for category in category_list:
-    if category.get_attribute('aria-label') == 'Pokemon Singles':
-        found = True
-        break
-# if filter not visible, click on show more and get the 
-if found == False:
-    show_more_btn = shadow_root.find_element(By.CSS_SELECTOR, value='span[class*="show-more-button-text"]')
-    shdw_rt_click_btn(show_more_btn)
-    shadow_host = driver.find_element(By.XPATH, value='//div[@id="fast-simon-serp-app"]')
-    shadow_root = get_shadow_root(shadow_host)
-
-pkmn_singles_btn = shadow_root.find_element(By.CSS_SELECTOR, value='span[aria-label*="Pokemon Singles"]') # click on span, not div
-shdw_rt_click_btn(pkmn_singles_btn)
-
-# wait until the element it finds is stale before refreshing the shadow_root
-WebDriverWait(driver, 5).until(
-    EC.staleness_of(shadow_root.find_element(By.CSS_SELECTOR, value='div[class*="product-card-items-wrapper"]'))
-)
 
 shadow_host = driver.find_element(By.XPATH, value='//div[@id="fast-simon-serp-app"]')
 shadow_root = get_shadow_root(shadow_host)
@@ -116,10 +133,8 @@ my_dict = {'Title':card_title, 'Set':card_set, 'Price':card_price, 'Link':card_l
 df_headlines = pd.DataFrame(my_dict)
 
 # os.getcwd() returns path that script is running from.
-print(os.getcwd())
+# print(os.getcwd())
 df_headlines.to_csv(os.getcwd()+r'/card-list-' + thing + r'.csv') # 'r' before a string tells interpreter to treat backslashes as literal character
-
-time.sleep(3)
 
 driver.close()
 driver.quit()
