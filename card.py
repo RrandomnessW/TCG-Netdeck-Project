@@ -32,12 +32,16 @@ class Card:
         pass # used as 'empty code'
 
     # argument passed to a function is assigned to a new local variable within the function
+    # returns shadow root
     def get_shadow_root(self, element):
         return self.driver.execute_script('return arguments[0].shadowRoot', element)
 
+    # clicks a button in a shadow root
+    # Unused for now.
     def shdw_rt_click_btn(self, element):
         self.driver.execute_script('arguments[0].click();',element)
 
+    # code to scrape card data on 1 single 401games page. 
     def scrape_single_page(self):
         self.driver.get(self.website + self.card_name + self.filter_401)
         
