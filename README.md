@@ -7,8 +7,17 @@ One night, I was trying to buy the individual cards for a MTG commander deck of 
 Be able to take an input decklist for Pokemon, MTG, or Yugioh, input it into this program, and get an optimized price for the entire deck that you can then buy!
 
 ### What has been finished:
-Searching for Pokémon cards and scraping data of single card products into csv files on 401-games website is successful. CSV files will have data of title, set, price, and product link for each Pokémon card. 
-The goal for the simplest version of this project: Single process program that adds cheapest, in stock, cards to cart in 401games website only (without application UI).
+- Searching for Pokémon cards and scraping data of single card products into csv files on 401-games website is successful. CSV files will have data of title, set, price, and product link for each Pokémon card. 
+- The goal for the simplest version of this project: Single process program that adds cheapest, in stock, cards to cart in 401games website only (without application UI).
+
+Card data for Charizard ex in csv file:
+![Charizard ex](README_Images/Charizard%20ex.png "Charizard ex")
+Card data for Frosmoth in csv file:
+![Frosmoth](README_Images/Frosmoth.png "Frosmoth")
+Card data for Irida in csv file:
+![Irida](README_Images/Irida.png "Irida")
+Card data for Teal Mask Ogerpon ex in csv file:
+![Teal Mask Ogerpon ex](README_Images/Teal%20Mask%20Ogerpon%20ex.png "Teal Mask Ogerpon")
 
 ### Next tasks to complete:
 - **Calculate cheapest combination of wanted cards.**
@@ -24,15 +33,6 @@ The goal for the simplest version of this project: Single process program that a
 ### Design decisions to think about for continuing this project:
 - Data storage scalability. A full deck list may require a search for 100+ cards. Having 100+ csv files created does not seem to be the wisest decision when the data can be stored in data structures.
 - Be an organized project that can be built upon in the future.
-
-### Things I had to learn
-Classes OOP
-HTML Tags
-Selenium
-XPath
-Shadow DOM
-
-Unit test: periodic testing of each feature implemented to ensure data scraping of card products results no errors. 
 
 ### Python script descriptions:
 
@@ -55,7 +55,17 @@ news-headlines.py
 card.py
 - Class to encapsulate webscraping functions for single cards.
 - Contains data related to the card from webscraping
+- In function scrape_single_page, it loads the 401games website that searches for the card, and sorts the product list using filters, then it starts scraping the html and shadow dom data. This is then stored to a csv file and outputted to the terminal.
 
 bulbapedia_scraper.py
 - Test script to see if navigation of this website is possible.
 - Will be used to figure out which cards are reprints of each other.
+
+### Things I had to learn
+Classes OOP
+HTML Tags
+Selenium
+XPath
+Shadow DOM
+
+Unit test: periodic testing of each feature implemented to ensure data scraping of card products results no errors. 
