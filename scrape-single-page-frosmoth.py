@@ -35,8 +35,14 @@ import card
 # options.add_argument("-headless")
 # driver = webdriver.Firefox(options=options)
 driver = webdriver.Firefox()
-single = card.Card(driver,1,'Teal Mask Ogerpon ex')
-single.scrape_single_page()
+single1 = card.Card(driver,1,'Teal Mask Ogerpon ex')
+single2 = card.Card(driver,1,'Charizard ex')
+single3 = card.Card(driver,1,'Irida')
+single4 = card.Card(driver,1,'Frosmoth')
+single1.scrape_single_page()
+single2.scrape_single_page()
+single3.scrape_single_page()
+single4.scrape_single_page()
 
 
 # driver.get(website + filter_401)
