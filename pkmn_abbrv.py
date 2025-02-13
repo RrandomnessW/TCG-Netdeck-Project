@@ -8,6 +8,7 @@ from selenium.webdriver.firefox.options import Options
 from selenium.webdriver.common.by import By
 import pandas as pd
 import time
+import os;
 
 website = 'https://pkmncards.com/sets/'
 
